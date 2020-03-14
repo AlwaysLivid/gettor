@@ -5,7 +5,6 @@ chardet==3.0.4
 constantly==15.1.0
 dkimpy==1.0.3
 dnspython==1.16.0
--e git+git@git-rw.torproject.org:gettor.git@3d6fb34e712f97d646b7502e62f6b6aba8a5382c#egg=gettor
 hyperlink==19.0.0
 idna==2.8
 incremental==17.5.0

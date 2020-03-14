@@ -52,21 +52,19 @@ class Twitterdm(object):
         """
         return self.settings.get("twitter_interval")
 
-
     def twitter_callback(self, message):
         """
         Callback invoked after a message has been sent.
 
         :param message (string): Success details from the server.
         """
-        log.info("Message sent successfully.")
-
+        log.info("Twitter: Message sent successfully.")
 
     def twitter_errback(self, error):
         """
         Errback if we don't/can't send the message.
         """
-        log.debug("Could not send message.")
+        log.debug("Twitter: Could not send message.")
         raise RuntimeError("{}".format(error))
 
 
@@ -94,7 +92,7 @@ class Twitterdm(object):
             time.sleeps(61)
 
         else:
-            raise RuntimeError("Error sending message: (%s)" % str(e))
+            raise RuntimeError("Twitter: Error sending message: (%s)" % str(e))
 
         return post_data
 
@@ -105,14 +103,15 @@ class Twitterdm(object):
         the Twitter service.
         """
 
-        log.debug("Retrieve list of messages")
+        log.debug("Twitter: Retrieve list of messages")
         data = self.twitter.twitter_data()
 
         for e in data['events']:
 
-            message_id = { "id": e['id'], "twitter_handle": e['message_create']['sender_id'] }
+            message_id = {
+                "id": e['id'], "twitter_handle": e['message_create']['sender_id']}
 
-            log.debug("Parsing message")
+            log.debug("Twitter: Parsing message")
             tp = TwitterParser(self.settings, message_id)
             yield defer.maybeDeferred(
                 tp.parse, e['message_create']['message_data']['text'], message_id
@@ -131,7 +130,7 @@ class Twitterdm(object):
         if help_requests:
             strings.load_strings("en")
             try:
-                log.info("Got new help request.")
+                log.info("Twitter: Got new help request.")
 
                 for request in help_requests:
                     ids = json.loads("{}".format(request[0].replace("'", '"')))
@@ -166,11 +165,11 @@ class Twitterdm(object):
                     )
 
             except RuntimeError as e:
-                log.info("Error sending twitter message: {}.".format(e))
+                log.info("Twitter: Error sending twitter message: {}.".format(e))
 
         elif link_requests:
             try:
-                log.info("Got new links request.")
+                log.info("Twitter: Got new links request.")
 
                 for request in link_requests:
                     ids = json.loads("{}".format(request[0].replace("'", '"')))
@@ -188,7 +187,7 @@ class Twitterdm(object):
                     strings.load_strings(language)
                     locale = locales[language]['locale']
 
-                    log.info("Getting links for {}.".format(platform))
+                    log.info("Twitter: Getting links for {}.".format(platform))
                     links = yield self.conn.get_links(
                         platform=platform, language=locale, status="ACTIVE"
                     )
@@ -216,7 +215,8 @@ class Twitterdm(object):
                         else:
                             link_msg = link_str
 
-                        body_msg = strings._("links_body_platform").format(platform)
+                        body_msg = strings._(
+                            "links_body_platform").format(platform)
                         body_msg += trings._("links_body_links").format(link_msg)
                         body_msg += trings._("links_body_archive")
                         body_msg += trings._("links_body_internet_archive")
@@ -247,6 +247,6 @@ class Twitterdm(object):
                     )
 
             except RuntimeError as e:
-                log.info("Error sending message: {}.".format(e))
+                log.info("Twitter: Error sending message: {}.".format(e))
         else:
-            log.debug("No pending twitter requests. Keep waiting.")
+            log.debug("Twitter: No pending twitter requests. Keep waiting.")
