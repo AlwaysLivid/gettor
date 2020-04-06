@@ -28,7 +28,11 @@ class Telegram(object):
 
         telegram_key = self.settings.get("telegram_key")
 
-        self.telegram_bot = telegram_oauth(telegram_key)
+        self.telegram_bot = telebot.TeleBot(telegram_key)
 
     def telegram_oauth(self, telegram_key):
         return telebot.AsyncTeleBot(token=telegram_key)
+
+    # Placeholder
+    def get_new(self):
+        pass

@@ -52,4 +52,13 @@ class Telegramdm(object):
         raise RuntimeError("{}".format(error))
 
     def telegramdm(self, error):
+        """
+        TO-DO: Add reply mechanism here, use it in get_new().
+        """
+        pass
+
+    def get_new(self):
+        """
+        TO-DO: Add listener here?
+        """
         pass
